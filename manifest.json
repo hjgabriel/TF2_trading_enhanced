@@ -1,22 +1,25 @@
 {
   "name": "TF2 Halloween Searcher Alpha",
   "description": "Simplifying TF2 searching process",
-  "version": "0.1",
+  "version": "0.5",
   "manifest_version": 2,
 
   "content_scripts": [
     {
       "matches": [
-      "https://backpack.tf/classifieds?*",
-      "http://www.tf2outpost.com/*",
-      "http://steamcommunity.com/market/listings/*"],
-      "js": ["js/library/jquery-3.1.0.min.js","js/library/bootstrap.min.js","js/SpellSearch.js","js/content.js"]
+      "*://backpack.tf/classifieds*",
+      "*://www.tf2outpost.com/search/*",
+      "*://steamcommunity.com/market/listings/*"],
+      "js": ["js/library/jquery-3.1.0.min.js","js/library/bootstrap.min.js","js/init.js","js/backpack.js","js/outpost.js","js/scm.js","js/content.js"]
     }
   ],
 
-  "icons": { 
-		"16": "images/icon16.png",
-		"48": "images/icon48.png",
-		"128": "images/icon128.png" 
+  "permissions":[
+    "alarms"
+  ],
+
+  "icons": {
+    "16": "images/halloween_icon16.png", 
+		"128": "images/halloween_icon128.png" 
 	}
 }

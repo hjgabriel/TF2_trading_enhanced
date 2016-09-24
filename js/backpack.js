@@ -1,15 +1,15 @@
-var page_div = "ul.pagination li a";
-var order_columns = "ul.media-list";
-var button_id = "#backpack_spells";
+var page_bp = "ul.pagination li a";
+var columns_bp = "ul.media-list";
+var button_bp = "#" + bp;
 
 //backpack
 function BackPack_start(){
-	$(document).on('click', button_id, function(){
+	$(document).on('click', button_bp, function(){
 		//empty items on the page
-		$(order_columns).empty();
+		$(columns_bp).empty();
 		
 		//find last page number
-		var page_link = $(page_div).last()[0].href;
+		var page_link = $(page_bp).last()[0].href;
 		var page_text = "&page=";
 		var page_num = page_link.slice(page_link.indexOf(page_text)+page_text.length);
 
@@ -17,17 +17,19 @@ function BackPack_start(){
 			page_num = 1;
 		}
 
-		$(button_id).text("Loading " + page_num + " page(s)....");
-		$(button_id).addClass("disabled");
+		$(button_bp).text("Loading " + page_num + " page(s)....");
+		$(button_bp).addClass("disabled");
 
 		for(var i = 1; i<= page_num;i++){
 			//Go to all the other pages and check for halloween spells
 			//console.log(document.location.href +page_text+ i);
+			var c_page = "none";
+
 			if(i == page_num){
-				GrabDOM(document.location.href +page_text+ i,"last", Backpack_Loop);
-			}else{
-				GrabDOM(document.location.href +page_text+ i,"none", Backpack_Loop);
+				c_page = "last";
 			}
+
+			GrabDOM(0,document.location.href +page_text+ i,c_page, Backpack_Loop);
 		}
 
 		//remove page links
@@ -36,7 +38,7 @@ function BackPack_start(){
 }
 
 function Backpack_Loop(DOM,c_page){
-	var item_list = $(DOM).find(order_columns).first();
+	var item_list = $(DOM).find(columns_bp).first();
 	//console.log(item_list.children('li'));
 
 	item_list.children('li').each(function(){
@@ -46,7 +48,7 @@ function Backpack_Loop(DOM,c_page){
 			var node = $(this).find("li");
 			node.attr('data-toggle',"popover");
 
-			$(order_columns).first().append(this.outerHTML);
+			$(columns_bp).first().append(this.outerHTML);
 
 			//show custom popover
 			show_popover(node[0]);
@@ -60,7 +62,7 @@ function Backpack_Loop(DOM,c_page){
 }
 
 function Backpack_complete(){
-	$(button_id).text("Finished!!!");
+	$(button_bp).text("Finished!!!");
 }
 
 function show_popover(info){
@@ -101,13 +103,4 @@ function show_popover(info){
 	        trigger: "hover click focus",
 	        html: true
     	});
-}
-
-
-//steamcommunity
-function SteamCommunity_start(){
-	$(document).on('click', "#comm_spells", function(){
-		console.log("spell_button");
-		console.log(($("div.responsive_page_template_content script")[1]).innerHTML);
-	});
 }
