@@ -1,9 +1,10 @@
 var columns_out = ".trade.widget.widget-trade.trade-has-tools";
 var page_out = "ul.pagination.widget.widget-pagination li";
 var button_out = "#" + out;
-
-
-//backpack
+var summary_tag = "div.modal-item.widget.widget-summary";
+var attribute_tag = "div.modal-item-attributes.widget.widget-summary";
+var history_tag = "div.modal-item-history.widget.widget-summary";
+//outpost
 function Outpost_start(){
 	$(document).on('click', button_out, function(){
 		//empty items on the page
@@ -56,4 +57,20 @@ function Outpost_Loop(DOM,c_page){
 
 function Outpost_complete(){
 	$(button_out).text("Finished!!!");
+}
+
+//Add Item history button on outpost
+function Outpost_addButton(){
+	//using history instead of attribute as it will also try to run for buying sections
+	$(document).on("DOMNodeInserted",history_tag, function(){
+		var original_id = $(document).find(attribute_tag + " div.col-md-9.summary-white")[1].innerHTML;
+		//console.log(original_id);
+		var history_btn = '<a class="btn btn-success" '
+		+'href="https://backpack.tf/item/' + original_id +'">BP HISTORY</a>';
+		$(summary_tag).find("div.summary-padded.summary-light ul.item-links").append(history_btn);
+
+		//Add bp price here
+		//$(summary_tag).find("div.item-info div.item-subtitle").append(" ");
+
+	});
 }
