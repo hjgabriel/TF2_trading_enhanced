@@ -20,6 +20,11 @@ function BackPack_start(){
 		$(button_bp).text("Loading " + page_num + " page(s)....");
 		$(button_bp).addClass("disabled");
 
+		if(page_num >= 20){
+			page_num = 20;
+			$("div.panel-body.padded.panel-body-alt").append("Currently we do not support more than 20 pages. This will be fixed soon");
+		}
+
 		for(var i = 1; i<= page_num;i++){
 			//Go to all the other pages and check for halloween spells
 			//console.log(document.location.href +page_text+ i);
