@@ -14,9 +14,11 @@ function content(){
 			Outpost_start();
 		}
 	}else if(URL.includes("steamcommunity.com/market/listings/")){
-		var button = '<a class="btn_green_white_innerfade btn_medium" id='+ scm +' ><span>Find Halloween Spells</span></a>';
-		$('#market_buyorder_info div div[style="float: right; padding-right: 10px"]').append(button);
-		scm_start();
+		if(!URL.includes("?filter=halloween")){
+			var button = '<a class="btn_green_white_innerfade btn_medium" id='+ scm +' ><span>Find Halloween Spells</span></a>';
+			$('#market_buyorder_info div div[style="float: right; padding-right: 10px"]').append(button);
+			scm_start();
+		}
 	}else{
 		console.log("Something went wrong");
 	}
