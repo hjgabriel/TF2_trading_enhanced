@@ -21,6 +21,13 @@ function Outpost_start(){
 		$(button_out).text("Loading " + page_num + " page(s)....");
 		$(button_out).addClass("disabled");
 
+		var link = document.location.href;
+		var ulist = link.split(",");
+		if(ulist.length > 0){
+			link = ulist[0];
+			console.log(link);
+		}
+
 		for(var i = 1; i<= page_num;i++){
 			//Go to all the other pages and check for halloween spells
 			//console.log(document.location.href +page_text+ i);
@@ -29,7 +36,7 @@ function Outpost_start(){
 				c_page = "last"
 			}
 
-			GrabDOM(1,document.location.href +","+ i,c_page, Outpost_Loop);
+			GrabDOM(1, link+","+ i,c_page, Outpost_Loop);
 		}
 
 		//remove page links

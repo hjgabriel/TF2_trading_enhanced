@@ -43,6 +43,7 @@ function BackPack_start(){
 }
 
 function Backpack_Loop(DOM,c_page){
+	//console.log(DOM);
 	var item_list = $(DOM).find(columns_bp).first();
 	//console.log(item_list.children('li'));
 

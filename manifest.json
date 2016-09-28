@@ -1,7 +1,7 @@
 {
   "name": "TF2 Halloween Searcher Alpha",
   "description": "Simplifying TF2 searching process",
-  "version": "0.7",
+  "version": "0.9",
   "manifest_version": 2,
 
   "content_scripts": [
@@ -10,7 +10,8 @@
       "*://backpack.tf/classifieds*",
       "*://www.tf2outpost.com/*",
       "*://steamcommunity.com/market/listings/*"],
-      "js": ["js/library/jquery-3.1.0.min.js","js/library/bootstrap.min.js","js/init.js","js/backpack.js","js/outpost.js","js/scm.js","js/content.js"]
+      "js": ["js/library/jquery-3.1.0.min.js","js/library/bootstrap.min.js",
+      "js/init.js","js/backpack.js","js/outpost.js","js/scm.js","js/content.js"]
     }
   ],
 

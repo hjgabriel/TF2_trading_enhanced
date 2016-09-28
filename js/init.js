@@ -8,7 +8,7 @@ function toHTML(html) {
 	return page;
 }
 
-function GrabDOM(content_id,URL,c_page,callback){
+function GrabDOM_old(content_id,URL,c_page,callback){
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", URL, true);
 	xhr.onreadystatechange = function() {
@@ -30,4 +30,21 @@ function GrabDOM(content_id,URL,c_page,callback){
 		}
 	}
 	xhr.send();
+}
+
+function GrabDOM(content_id,URL,c_page,callback){
+	$.ajax({
+	  url: URL,
+	  dataType: 'text',
+	  success: function(data) {
+	  	//console.log(data);
+	    if(content_id == 0){
+	 	  	callback($($.parseHTML(data)),c_page);
+	 	  }else if(content_id == 1){
+	 	  	callback($($.parseHTML(data)),c_page);
+	 	  }else if(content_id == 2){
+	 	  	callback(JSON.parse(data),c_page);
+	 	  }
+	  }
+	});
 }
