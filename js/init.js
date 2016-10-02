@@ -1,6 +1,7 @@
 var bp = "backpack_spells";
 var out = "outpost_spells";
 var scm = "scm_spells";
+var itemUsed = "itemUsed";
 
 function toHTML(html) {
 	var page = document.createElement('html');
@@ -32,18 +33,18 @@ function GrabDOM_old(content_id,URL,c_page,callback){
 	xhr.send();
 }
 
-function GrabDOM(content_id,URL,c_page,callback){
+function GrabDOM(content_id,URL,arg,callback){
 	$.ajax({
 	  url: URL,
 	  dataType: 'text',
 	  success: function(data) {
 	  	//console.log(data);
 	    if(content_id == 0){
-	 	  	callback($($.parseHTML(data)),c_page);
+	 	  	callback($($.parseHTML(data)),arg);
 	 	  }else if(content_id == 1){
-	 	  	callback($($.parseHTML(data)),c_page);
+	 	  	callback($($.parseHTML(data)),arg);
 	 	  }else if(content_id == 2){
-	 	  	callback(JSON.parse(data),c_page);
+	 	  	callback(JSON.parse(data),arg);
 	 	  }
 	  }
 	});
