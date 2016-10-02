@@ -42,11 +42,11 @@ function Outpost_start(){
 			//console.log(link);
 		}
 
-		for(var i = page_num; i>= 0;i--){
+		for(var i = page_num; i>= 1;i--){
 			//Go to all the other pages and check for halloween spells
 			//console.log(document.location.href +page_text+ i);
 			var c_page = "none";
-			if(i == 0){
+			if(i <= 1){
 				c_page = "last";
 			}
 
