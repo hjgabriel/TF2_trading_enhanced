@@ -4,27 +4,17 @@
   "version": "0.11",
   "manifest_version": 2,
 
-  "permissions":[
-    "tabs"
-  ],
-
   "content_scripts": [
     {
       "matches": [
       "*://backpack.tf/classifieds*",
       "*://www.tf2outpost.com/*",
-      "*://steamcommunity.com/market/listings/*",
       "*://steamcommunity.com/tradeoffer/new/*",
       "*://steamcommunity.com/*/tradeoffers/sent/"],
       "js": ["js/library/jquery-3.1.0.min.js","js/library/bootstrap.min.js",
       "js/init.js","js/backpack.js","js/outpost.js","js/scm.js","js/content.js"]
     }
   ],
-
-  "background": {
-    "scripts": ["js/background.js"],
-    "persistent": false
-  },
 
   "icons": {
     "16": "images/halloween_icon16.png", 
