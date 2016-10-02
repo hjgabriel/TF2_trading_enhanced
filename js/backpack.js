@@ -22,7 +22,7 @@ function BackPack_start(){
 
 		if(page_num >= 20){
 			page_num = 20;
-			$("div.panel-body.padded.panel-body-alt").append("Currently we do not support more than 20 pages. This will be fixed soon");
+			$("div.panel-body.padded.panel-body-alt").append("Currently we do not support more than 20 pages. This will be changed soon");
 		}
 
 		for(var i = 1; i<= page_num;i++){

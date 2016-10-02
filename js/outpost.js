@@ -1,6 +1,9 @@
 var columns_out = ".trade.widget.widget-trade.trade-has-tools";
 var page_out = "ul.pagination.widget.widget-pagination li";
 var button_out = "#" + out;
+var item_search_div = "div.summary-padded li.search-query-arrow";
+var op_search_widget = "div.search-query.widget.widget-summary";
+
 var summary_tag = "div.modal-item.widget.widget-summary";
 var attribute_tag = "div.modal-item-attributes.widget.widget-summary";
 var history_tag = "div.modal-item-history.widget.widget-summary";
@@ -8,7 +11,7 @@ var history_tag = "div.modal-item-history.widget.widget-summary";
 function Outpost_start(){
 	$(document).on('click', button_out, function(){
 		//empty items on the page
-		$(columns_out).empty();
+		$(columns_out).remove();
 		
 		//find last page number
 		var page_num = $(page_out).length - 2; // - 2 for previous page and next page
@@ -16,27 +19,38 @@ function Outpost_start(){
 
 		if(page_num <= 0){
 			page_num = 1;
+		}else if(page_num >= 20){
+			page_num = 20;
 		}
 
+		//create loading button
 		$(button_out).text("Loading " + page_num + " page(s)....");
 		$(button_out).addClass("disabled");
 
+		//Find items
+		var item_ID = [];
+		$(item_search_div).prevAll().each(function(){
+			item_ID.push($(this).attr("data-hash").split(',')[1]);
+		});
+		//console.log(item_ID);
+
+		//Find link
 		var link = document.location.href;
 		var ulist = link.split(",");
 		if(ulist.length > 0){
 			link = ulist[0];
-			console.log(link);
+			//console.log(link);
 		}
 
-		for(var i = 1; i<= page_num;i++){
+		for(var i = page_num; i>= 0;i--){
 			//Go to all the other pages and check for halloween spells
 			//console.log(document.location.href +page_text+ i);
 			var c_page = "none";
-			if(i == page_num){
-				c_page = "last"
+			if(i == 0){
+				c_page = "last";
 			}
 
-			GrabDOM(1, link+","+ i,c_page, Outpost_Loop);
+			GrabDOM(1, link+","+ i,[item_ID,c_page], Outpost_Loop);
 		}
 
 		//remove page links
@@ -44,16 +58,34 @@ function Outpost_start(){
 	});
 }
 
-function Outpost_Loop(DOM,c_page){
+function Outpost_Loop(DOM,arg){
+	var item_ID = arg[0];
+	var c_page = arg[1];
 	var box_list = $(DOM).find(columns_out);
 	var item_list = $(box_list).find("div.trade-has.col-md-6");
 	//console.log(item_list);
 	//console.log(item_list.length);
 	var isHalloween = false;
 	item_list.each(function(index){
+		var hasHalloween = false;
 		//console.log(this);
-		if(this.innerHTML.includes('Halloween Spell:')){
-			$(columns_out).first().append(box_list[index]);
+		$(this).find("ul").children('li').each(function(){
+			//console.log(this);
+			var current_item_ID = $(this).attr("data-hash").split(",")[1];
+
+			if($.inArray(current_item_ID,item_ID) > -1){
+				var op_attribute = $(this).attr("data-attributes");
+				//console.log(this);
+				if(op_attribute != null && op_attribute.includes('Halloween Spell:')){
+					hasHalloween = true;
+					return false; //break out of the loop
+				}
+			}
+		});
+
+		if(hasHalloween){
+			//console.log(this);
+			$(box_list[index]).insertAfter(op_search_widget);
 		}
 	});
 
