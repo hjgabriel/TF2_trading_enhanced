@@ -3,7 +3,19 @@ var item_box = ".inventory_item_link";
 var item_history = "tradeoffers/sent/";
 var item_history_list = "div.tradeoffer_items_ctn:not(.inactive) div.tradeoffer_items.primary div.trade_item";
 
-//steam trade
+var rep_site = "https://rep.tf/";
+
+//add button on steam profile
+function addRepTF(){
+	var steamURL = window.location.href.split('/');
+	var steamID = steamURL[steamURL.length - 1] == '' ? steamURL[steamURL.length - 2] : steamURL.pop();
+	//console.log(steamID);
+
+	$("div.header_real_name.ellipsis").append('<a class="btn_green_white_innerfade btn_medium" target="_blank" href="'+
+		rep_site+steamID+'"><span>Rep.TF</span></a>');
+}
+
+//steam trades
 function scm_tradeoffer(){
 
 	$(document).on('click', button_itemUsed, function(){
@@ -51,3 +63,4 @@ function findUsedItem(item_list,steamIDURL){
 function finished_ItemSearch(){
 	$(button_itemUsed).hide();
 }
+

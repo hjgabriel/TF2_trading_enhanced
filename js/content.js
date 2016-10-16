@@ -17,6 +17,8 @@ function content(){
 		var button = '<div class="btn_green_white_innerfade btn_medium" style="margin-top: 20px" id='+ itemUsed +' ><span>Find Items in use on other trades</span></a>';
 		$("div.filter_ctn").append(button);
 		scm_tradeoffer();
+	}else if(URL.includes("steamcommunity.com/id/") || URL.includes("steamcommunity.com/profiles/")){
+		addRepTF();
 	}
 }
 
