@@ -2,8 +2,8 @@ function content(){
 	var URL = document.location.href; //get current URL
 
 	if(URL.includes("backpack.tf/classifieds")){
-		var button = '<a class="btn btn-success" id='+ bp +' style="margin-top: 10px">Find Halloween Spells</a>';
-		$("div.panel-body.padded.panel-body-alt").append(button);
+		var button = '<a class="btn btn-success" id='+ bp +' style="">Find Halloween Spells</a>';
+		$("div#search-crumbs").append(button);
 		BackPack_start();
 	}else if(URL.includes("tf2outpost.com/")){
 		Outpost_addButton();
