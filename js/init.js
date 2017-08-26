@@ -34,18 +34,18 @@ function GrabDOM_old(content_id,URL,c_page,callback){
 }
 
 function GrabDOM(content_id,URL,arg,callback){
-	$.ajax({
+	return $.ajax({
 	  url: URL,
 	  dataType: 'text',
 	  success: function(data) {
 	  	//console.log(data);
 	    if(content_id == 0){
+	 	  	callback($($.parseHTML(data)));
+	 	}else if(content_id == 1){
 	 	  	callback($($.parseHTML(data)),arg);
-	 	  }else if(content_id == 1){
-	 	  	callback($($.parseHTML(data)),arg);
-	 	  }else if(content_id == 2){
-	 	  	callback(JSON.parse(data),arg);
-	 	  }
+	 	}else if(content_id == 2){
+	 		callback(JSON.parse(data),arg);
+	 	}
 	  }
 	});
 }

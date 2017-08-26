@@ -42,25 +42,31 @@ function Outpost_start(){
 			//console.log(link);
 		}
 
+		//Limiting the page to 20, unlikely to happen to be over 20 so not putting a message.
+		var page_limit=20;
+		if(page_num >= page_limit){
+			page_num = page_limit;
+		}
+
+		var deferreds = [];
+
 		for(var i = page_num; i>= 1;i--){
 			//Go to all the other pages and check for halloween spells
 			//console.log(document.location.href +page_text+ i);
-			var c_page = "none";
-			if(i <= 1){
-				c_page = "last";
-			}
 
-			GrabDOM(1, link+","+ i,[item_ID,c_page], Outpost_Loop);
+			deferreds.push(GrabDOM(1, link+","+ i,item_ID, Outpost_Loop));
 		}
+
+		$.when.apply($, deferreds).done(function() {
+            Outpost_complete();
+        });
 
 		//remove page links
 		$(page_out).empty();
 	});
 }
 
-function Outpost_Loop(DOM,arg){
-	var item_ID = arg[0];
-	var c_page = arg[1];
+function Outpost_Loop(DOM,item_ID){
 	var box_list = $(DOM).find(columns_out);
 	var item_list = $(box_list).find("div.trade-has.col-md-6");
 	//console.log(item_list);
@@ -88,10 +94,6 @@ function Outpost_Loop(DOM,arg){
 			$(box_list[index]).insertAfter(op_search_widget);
 		}
 	});
-
-	if(c_page === "last"){
-		Outpost_complete();
-	}
 }
 
 function Outpost_complete(){

@@ -11,7 +11,7 @@ function addRepTF(){
 	var steamID = steamURL[steamURL.length - 1] == '' ? steamURL[steamURL.length - 2] : steamURL.pop();
 	//console.log(steamID);
 
-	$("div.header_real_name.ellipsis").append('<a class="btn_green_white_innerfade btn_medium" target="_blank" href="'+
+	$("div.header_real_name.ellipsis").append('<br><a class="btn_green_white_innerfade btn_medium" target="_blank" href="'+
 		rep_site+steamID+'"><span>Rep.TF</span></a>');
 }
 
@@ -25,7 +25,7 @@ function scm_tradeoffer(){
 		var steamIDURL = $(document).find(item_box)[0].href.split("inventory")[0];
 		//console.log(steamIDURL);
 
-		GrabDOM(0,steamIDURL+item_history,steamIDURL,ItemSentHistory);
+		GrabDOM(1,steamIDURL+item_history,steamIDURL,ItemSentHistory);
 	});
 }
 
