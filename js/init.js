@@ -2,50 +2,49 @@ var bp = "backpack_spells";
 var out = "outpost_spells";
 var scm = "scm_spells";
 var itemUsed = "itemUsed";
+var defaultSteamURL = "https://steamcommunity.com/profiles/";
 
-function toHTML(html) {
-	var page = document.createElement('html');
-	page.innerHTML = html;
-	return page;
-}
-
-function GrabDOM_old(content_id,URL,c_page,callback){
-	var xhr = new XMLHttpRequest();
-	xhr.open("GET", URL, true);
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-     	  //handle the xhr response here
-	 	  //console.log("ready");
-	 	  //console.log(xhr.responseURL);
-	 	  //console.log(xhr.responseText);
-	 	  //console.log(toHTML(xhr.responseText));
-	 	  if(content_id == 0){
-	 	  	callback(toHTML(xhr.responseText),c_page);
-	 	  }else if(content_id == 1){
-	 	  	callback(toHTML(xhr.responseText),c_page);
-	 	  }else if(content_id == 2){
-	 	  	callback(JSON.parse(xhr.responseText),c_page);
-	 	  }
-	 	  
-	 	  
-		}
-	}
-	xhr.send();
-}
-
-function GrabDOM(content_id,URL,arg,callback){
+function GrabDOM(content_id,URL,arg){
 	return $.ajax({
 	  url: URL,
 	  dataType: 'text',
 	  success: function(data) {
 	  	//console.log(data);
-	    if(content_id == 0){
-	 	  	callback($($.parseHTML(data)));
+	    (arg[0])[arg[1]-1] = data;
+	  },error: function(){
+	  	if(content_id == 0){
+	    	bpMsg("<br><font color='red'>\
+				Note: Page "+ arg[1] + " failed to load. " +
+				"It may be because of backpack server or a bug. " +
+				"Please refresh and try again.</font>");
 	 	}else if(content_id == 1){
-	 	  	callback($($.parseHTML(data)),arg);
+	 	  	outpostMsg("<br><font color='red'>\
+				Note: Page "+ arg[1] + " failed to load. " +
+				"It may be because of outpost server or a bug. " +
+				"Please refresh and try again.</font>");
 	 	}else if(content_id == 2){
-	 		callback(JSON.parse(data),arg);
+	 		//callback(JSON.parse(data),arg);
 	 	}
 	  }
 	});
+}
+
+//get query of a specific parameter
+function setURLParameter(url,key,value) {
+	var l_url = url.split('&'), query = {}, new_url="";
+	//console.log(url_list);
+	for (var i=0; i < l_url.length; i++){
+		if(l_url[i].indexOf('=') !== -1){
+			var param = l_url[i].split('=');
+			query[param[0]] = param[1];
+			//console.log(param);
+		}else if(i !== l_url.length-1){
+			new_url +=str+"&";
+		}
+	}
+	query[key] = value; //sets new query
+	new_url += $.param(query);
+	new_url = decodeURIComponent(new_url);
+	//console.log(new_url);
+	return new_url;
 }

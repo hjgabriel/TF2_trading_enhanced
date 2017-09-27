@@ -1,6 +1,8 @@
-var page_bp = "ul.pagination li a";
+var page_bp = "ul.pagination li a[href]";
 var columns_bp = "ul.media-list";
 var button_bp = "#" + bp;
+var placement_bp ="div.pull-right.listing-buttons";
+var bp_profile_finder = "a.user-link";
 
 //backpack
 function BackPack_start(){
@@ -9,35 +11,28 @@ function BackPack_start(){
 		$(columns_bp).empty();
 		
 		//find last page number
-		var page_link = $(page_bp).last()[0].href;
-		var page_text = "&page=";
-		var page_num = page_link.slice(page_link.indexOf(page_text)+page_text.length);
+		var url = getBpURL();
+		var l_page_num = getBpPageNum(url);
 
-		if(page_num == ""){
-			page_num = 1;
-		}
-
-		var page_limit=20;
-		if(page_num >= page_limit){
-			page_num = page_limit;
-			$("div#search-crumbs").append("<br><font color='red'>\
-				Note: Due to the server problems on backpack.tf, I am limiting to load up to "
-				+ page_limit + " pages.</font>");
-		}
-
-		$(button_bp).text("Loading " + page_num + " page(s)....");
+		$(button_bp).text("Loading " + l_page_num + " page(s)....");
 		$(button_bp).addClass("disabled");
 
-		var deferreds = [];
+		var deferreds = [],results = [];
 
-		for(var i = 1; i<= page_num;i++){
+		for(var i = 1; i<= l_page_num;i++){
 			//Go to all the other pages and check for halloween spells
-			//console.log(document.location.href +page_text+ i);
-
-			deferreds.push(GrabDOM(0,document.location.href +page_text+ i,null, Backpack_Loop));
+			//console.log(document.location.href);
+			var new_url = setURLParameter(document.location.href,'page',i);
+			deferreds.push(GrabDOM(0,new_url,[results, i]));
 		}
 
 		$.when.apply($, deferreds).done(function() {
+			//console.log(results);
+			for(var i = 0; i< results.length;i++){
+				var result = results[i];
+				//console.log(result);
+				Backpack_Loop(result);
+			}
             Backpack_complete();
         });
 
@@ -46,6 +41,7 @@ function BackPack_start(){
 	});
 }
 
+//goes over the list and checks for spells. If the item has spells we list them.
 function Backpack_Loop(DOM){
 	//console.log(DOM);
 	var item_list = $(DOM).find(columns_bp).first();
@@ -67,10 +63,40 @@ function Backpack_Loop(DOM){
 	});
 }
 
+//Helper
+function getBpURL(){
+	var l_page_url = $(page_bp).last()[0].href;
+	//console.log(l_page_url);
+	return l_page_url;
+}
+
+function getBpPageNum(url){
+	var page_text = "&page=";
+	var l_page_num = url.split(page_text)[1];
+	if(l_page_num == null){
+		l_page_num = 1;
+	}
+
+	var page_limit=20;
+	if(l_page_num >= page_limit){
+		l_page_num = page_limit;
+		bpMsg("<br><font color='red'>\
+			Note: we do not want to overflow backpack.tf servers,so I am limiting loading upto "
+			+ page_limit + " pages.</font>");
+	}
+	return l_page_num;
+}
+
+//Post any error or notable message 
+function bpMsg(msg){
+	$("div#search-crumbs").append(msg);
+}
+
 function Backpack_complete(){
 	$(button_bp).text("Finished!!!");
 }
 
+//shows the popover when you hover over the item. Outpost and other buttons are not implmented yet
 function show_popover(info){
 	var p_title = info.title;
 	var p_spell = info.getAttribute("data-spell_1");
@@ -107,6 +133,33 @@ function show_popover(info){
 	        title: '<h3 class="popover-title">' + p_title + '</h3>',
 	        content: body,
 	        trigger: "hover click focus",
+	        placement: 'top',
 	        html: true
     	});
+}
+
+//Add see_inventory button
+function see_inventory(){
+	var item_list = $(columns_bp).first();
+	//console.log(item_list);
+	item_list.children('li').each(function(){
+		//console.log(this.id);
+		var item_id = "440_2_"+this.id.split("_")[1];
+		//console.log(item_id);
+		//find the inventory url
+		//In order to do that, we use item id and the user profile link to find the item
+		var bp_profile = $(this).find(bp_profile_finder)[0].href;
+		//console.log(bp_profile);
+		var steam_user_link = defaultSteamURL + bp_profile.replace(/[^0-9]+/, '');
+		//console.log(steam_user_link);
+		var steam_link_id = steam_user_link + "/inventory/#" + item_id;
+
+		//Add button under the correct placement
+		var b_placement = $(this).find(placement_bp);
+		//console.log(b_placement);
+		var b_inspect = '<a href="'+steam_link_id+'" \
+						class="btn btn-xs btn-bottom btn-primary" target="_blank"\
+		 				data-original-title="Check in-game"><span>See Inventory</span></a>';
+		b_placement.prepend(b_inspect);
+	});
 }

@@ -15,6 +15,9 @@ function addRepTF(){
 		rep_site+steamID+'"><span>Rep.TF</span></a>');
 }
 
+
+//Steam trade offer stuff goes
+
 //steam trades
 function scm_tradeoffer(){
 

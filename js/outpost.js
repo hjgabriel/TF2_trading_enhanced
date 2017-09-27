@@ -14,14 +14,7 @@ function Outpost_start(){
 		$(columns_out).remove();
 		
 		//find last page number
-		var page_num = $(page_out).length - 2; // - 2 for previous page and next page
-		//console.log(page_num);
-
-		if(page_num <= 0){
-			page_num = 1;
-		}else if(page_num >= 20){
-			page_num = 20;
-		}
+		var page_num = getoutpostPageNum();
 
 		//create loading button
 		$(button_out).text("Loading " + page_num + " page(s)....");
@@ -35,29 +28,23 @@ function Outpost_start(){
 		//console.log(item_ID);
 
 		//Find link
-		var link = document.location.href;
-		var ulist = link.split(",");
-		if(ulist.length > 0){
-			link = ulist[0];
-			//console.log(link);
-		}
+		var link = getoutpostURL();
 
-		//Limiting the page to 20, unlikely to happen to be over 20 so not putting a message.
-		var page_limit=20;
-		if(page_num >= page_limit){
-			page_num = page_limit;
-		}
+		var deferreds = [],results = [];
 
-		var deferreds = [];
-
-		for(var i = page_num; i>= 1;i--){
+		for(var i = 1; i<=page_num;i++){
 			//Go to all the other pages and check for halloween spells
 			//console.log(document.location.href +page_text+ i);
 
-			deferreds.push(GrabDOM(1, link+","+ i,item_ID, Outpost_Loop));
+			deferreds.push(GrabDOM(1, link+","+ i,[results, i]));
 		}
 
 		$.when.apply($, deferreds).done(function() {
+			for(var i = results.length-1; i>=0;i--){
+				var result = results[i];
+				//console.log(result);
+				Outpost_Loop(result,item_ID);
+			}
             Outpost_complete();
         });
 
@@ -71,7 +58,6 @@ function Outpost_Loop(DOM,item_ID){
 	var item_list = $(box_list).find("div.trade-has.col-md-6");
 	//console.log(item_list);
 	//console.log(item_list.length);
-	var isHalloween = false;
 	item_list.each(function(index){
 		var hasHalloween = false;
 		//console.log(this);
@@ -94,6 +80,38 @@ function Outpost_Loop(DOM,item_ID){
 			$(box_list[index]).insertAfter(op_search_widget);
 		}
 	});
+}
+
+//Helper
+function getoutpostURL(){
+	var link = document.location.href;
+	var ulist = link.split(",");
+	if(ulist.length > 0){
+		link = ulist[0];
+		//console.log(link);
+	}
+	return link;
+}
+
+function getoutpostPageNum(){
+	var page_num = $(page_out).length - 2; // - 2 for previous page and next page
+	var page_limit=20;
+	//console.log(page_num);
+
+	if(page_num <= 0){
+		page_num = 1;
+	}else if(page_num >= page_limit){
+		page_num = page_limit;
+		outpostMsg("<br><font color='red'>\
+			Note: we do not want to overflow outpost servers,so I am limiting loading upto "
+			+ page_limit + " pages.</font>");
+	}
+	return page_num;
+}
+
+//Post any error or notable message 
+function outpostMsg(msg){
+	$("div.summary-padded").append(msg);
 }
 
 function Outpost_complete(){
