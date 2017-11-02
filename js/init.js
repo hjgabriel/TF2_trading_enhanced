@@ -48,3 +48,16 @@ function setURLParameter(url,key,value) {
 	//console.log(new_url);
 	return new_url;
 }
+
+//Injecting code to the page in order to access the pages' javascript.
+function injectJS(code){
+	var script = document.createElement('script');
+	script.textContent = code;
+	(document.head||document.documentElement).appendChild(script);
+	script.remove();
+}
+
+//convert js code to string so that I can inject it
+function code_to_string(code){
+	return '(' + code + ')();';
+}

@@ -1,7 +1,7 @@
 {
-  "name": "TF2 Searcher+ Beta",
-  "description": "Simplifying TF2 searching process on backpack/outpost as well as having additional features.",
-  "version": "0.20",
+  "name": "TF2 Trading Enhanced",
+  "description": "Adds additional features on backpack, outpost and steam.",
+  "version": "0.30",
   "manifest_version": 2,
 
   "content_scripts": [
@@ -14,7 +14,7 @@
       "*://steamcommunity.com/id/*",
       "*://steamcommunity.com/profiles/*"],
       "js": ["js/library/jquery-3.1.0.min.js","js/library/bootstrap.min.js",
-      "js/init.js","js/backpack.js","js/outpost.js","js/scm.js","js/content.js"]
+      "js/init.js","js/backpack.js","js/outpost.js","js/profile_page.js","js/trade_offer.js","js/content.js"]
     }
   ],
 

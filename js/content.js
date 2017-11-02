@@ -14,21 +14,7 @@ function content(){
 			Outpost_start();
 		}
 	}else if(URL.includes("steamcommunity.com/tradeoffer/new/")){
-		var key_text = '<span class="market_search_sidebar_section_tip_small">Key:</span>';
-		var key_field = '<span class="market_search_sidebar_search_box market_search_input_container">\
-								<span>\
-									<input class="" type="text" autocomplete="off" tabindex="1">\
-								</span>\
-							</span>';
-		var ref_text = '<span class="market_search_sidebar_section_tip_small">Ref:</span>';
-		var ref_field = '<span class="market_search_sidebar_search_box market_search_input_container">\
-								<span>\
-									<input class="" type="text" autocomplete="off" tabindex="1">\
-								</span>\
-							</span>';
-		var button = '<div class="btn_green_white_innerfade btn_medium" style="margin-top: 20px" id='+ itemUsed +' ><span>Find Items in use on other trades</span></a>';
-		//$("div.filter_ctn").append(key_text+key_field+ref_text+ref_field+button);
-		//scm_tradeoffer();
+		steam_trade_start();
 	}else if(URL.includes("steamcommunity.com/id/") || URL.includes("steamcommunity.com/profiles/")){
 		addRepTF();
 	}

@@ -163,3 +163,43 @@ function see_inventory(){
 		b_placement.prepend(b_inspect);
 	});
 }
+
+/*
+Adds button under the popover. Current implementation only works on seller's classified.
+Scraping this idea because on bp user inventory page, we'll have a situation 
+where we would add a listener for every item which would slow down the site.
+Keeping this code for future references.
+
+function bpinspect_item(){
+	// select the target node
+	var target = $($(columns_bp)[0]).find("ul.item-singular.override-440");
+	//console.log(target);
+	 
+	for (var i = 0; i < target.length; i++) {
+
+	    // create an observer instance
+	    var observer = new MutationObserver(function(mutations) {
+	        mutations.forEach(function(mutation) {
+	        	if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+	        		//console.log(mutation.target);
+	        		var popover = $(mutation.target).find("div.popover-content");
+	        		var b_inspect = '<dd class="popover-btns"><a href="'+'" \
+						class="btn btn-xs btn-bottom btn-primary" target="_blank"\
+		 				>See Inventory</a></dd>';
+	        		popover.append(b_inspect);
+	        		console.log("Added Button");
+	        	}
+	        });
+	    });
+
+	    // configuration of the observer
+	    var config = {
+		    childList: true
+		};
+
+	    // pass in the target node, as well as the observer options
+	    observer.observe(target[i], config);
+	}
+
+}
+*/
