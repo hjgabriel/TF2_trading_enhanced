@@ -13,7 +13,7 @@ function content(){
 			$("div.summary-padded").append(button);
 			Outpost_start();
 		}
-	}else if(URL.includes("steamcommunity.com/tradeoffer/new/")){
+	}else if(URL.includes("steamcommunity.com/tradeoffer/")){
 		steam_trade_start();
 	}else if(URL.includes("steamcommunity.com/id/") || URL.includes("steamcommunity.com/profiles/")){
 		addRepTF();

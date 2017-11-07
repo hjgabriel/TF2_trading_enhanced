@@ -31,12 +31,19 @@ function steam_trade_start(){
 		var TF2extenUI = "TF2extensionUI";
 		var msgDiv = "TF2extensionMSG";
 		var TF2extenError = "TF2extenError";
+		var statDiv = "TF2extensionStatus";
 		var KeyRefbtn = "KeyRefbtn";
 		var btn_add = "#" + KeyRefbtn;
 
 		//So that I don't need to add jQuery everytime
 		function $(code){
 			return jQuery(code);
+		}
+
+		//Remove any text if it exists.
+		function clearText(){
+			$("#"+TF2extenError).remove();
+			$('#'+msgDiv).remove();
 		}
 
 		function createUI(){
@@ -65,18 +72,51 @@ function steam_trade_start(){
 			$("#"+parent_id).prepend(total_ui);
 		}
 
-		function showMSG(user,key,ref,rec,scrap){
+		function showAmount(user,key,ref,rec,scrap){
 			//console.log("does it work?");
 			clearText(); //clear anything before any sort of message is shown
-			var msg_key = '<div id='+msgDiv+'>' + border + '<strong>' + user + 
+			var msg_key = '<div id='+msgDiv+' style="color: white;">' + border + '<strong>' + user + 
 			' Total | Keys: ' + key + ' | Ref: '+ ref + ' | Rec: '+ rec + ' | Scrap: '+ scrap +
-			' |</strong>' + '</div>';
+			' |</strong></div>';
 			$("#"+parent_id).prepend(msg_key);
 		}
 
-		function createErrorBox(message){
+		function showError(message){
+			clearText(); //clear anything before any sort of message is shown
 			var errorbox = '<div id=' + TF2extenError + '>' + border +'<span id='+TF2extenError +' style="color: red;">'+ message +'</span>';
 			$("#"+parent_id).prepend(errorbox);
+		}
+
+		function showMSG(code){
+			$('#'+statDiv).remove(); //clear progress/status msg if it exist
+			var msg = '<div id='+statDiv+'>' + border + '<strong>' + code +
+			'</strong></div>';
+			$("#"+parent_id).append(msg);
+		}
+
+		function showLoading(){
+			var load = '<div style="color: white;"> Loading.....';
+			showMSG(load);
+		}
+
+		function showStatus(compl,miss){
+			$('#'+statDiv).remove(); //clear progress/status msg if it exist
+
+			var complete = '', missing = '';
+
+			//check if there was an added item
+			if(!([0,0,0,0].every((v,i)=> v === compl[i]))){
+				complete = '<div style="color: green;">Currently added - Keys: ' + compl[0] + 
+			' | Ref: '+ compl[1] + ' | Rec: '+ compl[2] + ' | Scrap: '+ compl[3] + ' |</div>';
+			}
+
+			//check if there is an empty item
+			if(!([0,0,0,0].every((v,i)=> v === miss[i]))){
+				missing = '<div style="color: red; margin-top:2%">' + '*Missing items* -- Keys: ' + miss[0] + 
+			' | Ref: '+ miss[1] + ' | Rec: '+ miss[2] + ' | Scrap: '+ miss[3] +' |</div>';
+			}
+
+			showMSG(complete+missing);
 		}
 
 		function keyErrorCheck(){
@@ -128,17 +168,32 @@ function steam_trade_start(){
 					scrap_list.push(item);
 				}
 			}
-			showMSG(user[userID],key_list.length,ref_list.length,rec_list.length,scrap_list.length);			
+			showAmount(user[userID],key_list.length,ref_list.length,rec_list.length,scrap_list.length);			
 		}
 
 		//add item to list
 		function addItem(){
+			showLoading(); // show loading indicator
+
 			var vkey = $("#"+key_field).val();
 			var vref = $("#"+ref_field).val();
 			var decimal = (vref - Math.floor(vref)).toFixed(2)*100;
 			var vrec = Math.floor(decimal/33);
 			var vscrap = Math.floor((decimal - vrec*33)/11); //using floor just in case
-			vref = Math.floor(vref);
+			vref = Math.floor(vref); //ignore reclaimed and scrap
+
+			var miss = [0,0,0,0]; //check for missing key or ref
+			var mkey = vkey - key_list.length;
+			var mref = vref - ref_list.length;
+			var mrec = vrec - rec_list.length;
+			var mscrap = vscrap - scrap_list.length;
+			var diff = [mkey,mref,mrec,mscrap];
+
+			for(var i=0; i < diff.length; i++){
+				if(diff[i] > 0){
+					miss[i] = diff[i];
+				}
+			}
 
 			vkey = Math.min(vkey,key_list.length);
 			vref = Math.min(vref,ref_list.length);
@@ -166,22 +221,16 @@ function steam_trade_start(){
 			}
 
 			//Update result
+			setTimeout(showStatus,(vkey+vref+vrec+vscrap)*50,[vkey,vref,vrec,vscrap],miss);
 			setTimeout(findAmount,(vkey+vref+vrec+vscrap)*50);
-		}
-
-		//Remove any text if it exists.
-		function clearText(){
-			$("#"+TF2extenError).remove();
-			$('#'+msgDiv).remove();
 		}
 
 		//add events
 		function TF2Events(){
 			//If the inventory of the user is clicked, we start searching for the ammount
-			var invMyTab = "inventory_select_your_inventory",invTheirTab = "inventory_select_their_inventory", 
-			my_sel = "appselect_option_you_440_2", their_sel = "appselect_option_them_440_2";
+			var invMyTab = "inventory_select_your_inventory",invTheirTab = "inventory_select_their_inventory";
 
-			$("a#"+invMyTab + ",a#" + invTheirTab + ", div#" + my_sel + ", div#" + their_sel).click(function(e){
+			$("a#"+invMyTab + ",a#" + invTheirTab).click(function(e){
 				//console.log("TF2 tab clicked");
 				//console.log(e.currentTarget);
 				//console.log($(e.currentTarget).attr("id") == invMyTab); //check which event fired
@@ -192,6 +241,19 @@ function steam_trade_start(){
 				}
 				doesTF2InvExist(errorCheck);
 			});
+
+			var my_sel = "div#appselect_option_you_440_2", their_sel = "div#appselect_option_them_440_2",
+			filter = "input#filter_control", clear = "div#filter_clear_btn";
+
+			//Cases where clear button for input is pressed or TF2 Inventory is selected for either users
+			$(my_sel+","+ their_sel +","+ filter +","+ clear).click(function(){
+				doesTF2InvExist(errorCheck);
+			});
+
+			//Also have inventory search if the filter has beeen changed
+			$('input#'+filter + ", div").on('input',function(e){
+				doesTF2InvExist(errorCheck);
+			});	
 
 			//selected an item in any box
 			$("div.trade_item_box").click(function(){
@@ -215,7 +277,7 @@ function steam_trade_start(){
 				//Tell user that TF2 has been unable to reload. Either reload or load TF2 the inventory to try again
 				var message = "TF2 Inventory was not found. Please select TF2 as the inventory above OR\
 				 reload the page to try again";
-				createErrorBox(message);
+				showError(message);
 			}
 		}
 		

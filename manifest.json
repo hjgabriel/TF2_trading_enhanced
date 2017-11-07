@@ -1,7 +1,7 @@
 {
   "name": "TF2 Trading Enhanced",
   "description": "Adds additional features on backpack, outpost and steam.",
-  "version": "0.31",
+  "version": "1.0.0",
   "manifest_version": 2,
 
   "content_scripts": [
@@ -9,7 +9,7 @@
       "matches": [
       "*://backpack.tf/classifieds*",
       "*://www.tf2outpost.com/*",
-      "*://steamcommunity.com/tradeoffer/new/*",
+      "*://steamcommunity.com/tradeoffer/*",
       "*://steamcommunity.com/*/tradeoffers/sent/",
       "*://steamcommunity.com/id/*",
       "*://steamcommunity.com/profiles/*"],
