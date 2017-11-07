@@ -2,7 +2,7 @@ function content(){
 	var URL = document.location.href; //get current URL
 
 	if(URL.includes("backpack.tf/classifieds")){
-		see_inventory();
+		add_inv_param();
 		var button = '<a class="btn btn-success" id='+ bp +' style="">Find Halloween Spells</a>';
 		$("div#search-crumbs").append(button);
 		BackPack_start();

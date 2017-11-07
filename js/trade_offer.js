@@ -40,16 +40,23 @@ function steam_trade_start(){
 		}
 
 		function createUI(){
+			var default_key = getUrlParam("key");
+			default_key = (typeof default_key === 'undefined') ? 0 : default_key;
+			var default_ref = getUrlParam("ref");
+			default_ref = (typeof default_ref === 'undefined') ? 0.00 : default_ref;
+
 			var key_text = '<span class="market_search_sidebar_section_tip_small">Key:</span>';
 			var fieldkey = '<span class="market_search_sidebar_search_box market_search_input_container">\
 									<span>\
-										<input id=' + key_field + ' type="number" min="0" step="1" autocomplete="off" tabindex="1" placeholder="0">\
+										<input id=' + key_field + ' class="filter_search_box" type="number" min="0" step="1"\
+										 autocomplete="off" tabindex="1" value='+default_key+'>\
 									</span>\
 								</span>';
 			var ref_text = '<span class="market_search_sidebar_section_tip_small">Ref:</span>';
 			var fieldref = '<span class="market_search_sidebar_search_box market_search_input_container">\
 									<span>\
-										<input id=' + ref_field + ' type="number" min="0" step="0.11" autocomplete="off" tabindex="1" placeholder="0.00">\
+										<input id=' + ref_field + ' class="filter_search_box" type="number" min="0" step="1"\
+										 autocomplete="off" tabindex="1" value='+default_ref+'>\
 									</span>\
 								</span>';
 			var key_ref_btn = '<div class="btn_green_white_innerfade" id='+ KeyRefbtn +' ><span>Add</span></a>';
@@ -157,6 +164,9 @@ function steam_trade_start(){
 			for(var i=0; i<vscrap;i++){
 				setTimeout(MoveItemToTrade,(i+vkey+vref+vrec)*50,scrap_list.shift());
 			}
+
+			//Update result
+			setTimeout(findAmount,(vkey+vref+vrec+vscrap)*50);
 		}
 
 		//Remove any text if it exists.
@@ -185,7 +195,7 @@ function steam_trade_start(){
 
 			//selected an item in any box
 			$("div.trade_item_box").click(function(){
-				findAmount();
+				setTimeout(findAmount,500); //wait for item to move before we check the items
 			});
 
 			$(document).on('click', btn_add, function(){
@@ -253,6 +263,16 @@ function steam_trade_start(){
 		           callback(false);
 		       }
 		    }, delay);
+		}
+
+		function getUrlParam(paramName) {
+		    var params = window.location.search.split(/\?|\&/);
+		    for(i = 0; i < params.length; i++) {
+		        var currentParam = params[i].split("=");
+		        if(currentParam[0] === paramName) {
+		            return currentParam[1];
+		        }
+		    }
 		}
 	});
 

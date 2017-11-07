@@ -3,6 +3,7 @@ var columns_bp = "ul.media-list";
 var button_bp = "#" + bp;
 var placement_bp ="div.pull-right.listing-buttons";
 var bp_profile_finder = "a.user-link";
+var seller_bp = "steamcommunity.com/tradeoffer/new/?partner=";
 
 //backpack
 function BackPack_start(){
@@ -138,8 +139,8 @@ function show_popover(info){
     	});
 }
 
-//Add see_inventory button
-function see_inventory(){
+//Add inventory button and add additional parameters
+function add_inv_param(){
 	var item_list = $(columns_bp).first();
 	//console.log(item_list);
 	item_list.children('li').each(function(){
@@ -161,6 +162,52 @@ function see_inventory(){
 						class="btn btn-xs btn-bottom btn-primary" target="_blank"\
 		 				data-original-title="Check in-game"><span>See Inventory</span></a>';
 		b_placement.prepend(b_inspect);
+		
+		//Also add key/value to use for steam trade
+		getKeyRefBP(this);
+	});
+
+	//also have for buy orders
+	item_list = $(columns_bp)[1];
+	//console.log(item_list);
+	$(item_list).children('li').each(function(){
+		//Also add key/value to use for steam trade
+		getKeyRefBP(this);
+	});
+}
+
+//find key and ref from item on backpack.tf classified
+function getKeyRefBP(node){
+	//console.log(node);
+	//console.log($(node).find("li.item"));
+	var value = $(node).find("li.item").attr("data-listing_price");
+	//console.log(value);
+	var arr = value.split(',');
+	var key = '', ref = '';
+	for(var i=0; i < arr.length;i++){
+		if(arr[i].indexOf("key") > -1){
+			key = arr[i].match(/[\d\.]+/)[0];
+		}else if(arr[i].indexOf("ref") > -1){
+			ref = arr[i].match(/[\d\.]+/)[0];
+		}
+	}
+	
+	addParamURL(node,key,ref);
+}
+
+//add key/ref value
+function addParamURL(node,key,ref){
+	$(node).find("a[href*='"+seller_bp+"']").each(function(){
+		//console.log(this);
+		var new_url = $(this).attr('href');
+		if(key != ''){
+			new_url = setURLParameter(new_url,"key",key);
+		}
+
+		if(ref != ''){
+			new_url = setURLParameter(new_url,"ref",ref);
+		}
+		$(this).attr('href',new_url);
 	});
 }
 
