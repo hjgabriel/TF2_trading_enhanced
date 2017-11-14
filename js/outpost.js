@@ -7,6 +7,11 @@ var op_search_widget = "div.search-query.widget.widget-summary";
 var summary_tag = "div.modal-item.widget.widget-summary";
 var attribute_tag = "div.modal-item-attributes.widget.widget-summary";
 var history_tag = "div.modal-item-history.widget.widget-summary";
+
+var seller_div = "div.trade-has.col-md-6";
+var get_bp_price = "get_bp_price";
+var btn_getprice = "."+get_bp_price;
+
 //outpost
 function Outpost_start(){
 	$(document).on('click', button_out, function(){
@@ -55,7 +60,7 @@ function Outpost_start(){
 
 function Outpost_Loop(DOM,item_ID){
 	var box_list = $(DOM).find(columns_out);
-	var item_list = $(box_list).find("div.trade-has.col-md-6");
+	var item_list = $(box_list).find(seller_div);
 	//console.log(item_list);
 	//console.log(item_list.length);
 	item_list.each(function(index){
@@ -69,7 +74,7 @@ function Outpost_Loop(DOM,item_ID){
 				var op_attribute = $(this).attr("data-attributes");
 				//console.log(this);
 				if(op_attribute != null && op_attribute.includes('Halloween Spell:')){
-					hasHalloween = true;
+					hasHalloween = true; //once we find an item with halloween spell, no need to search that post
 					return false; //break out of the loop
 				}
 			}
@@ -118,6 +123,52 @@ function Outpost_complete(){
 	$(button_out).text("Finished!!!");
 }
 
+//get bp prices for outpost
+function getBPprice(node){
+	var value = 0;
+	value = $(node).find("span.tag.bottom-right").text();
+	//console.log($(node).find("span.tag.bottom-right"));
+	//console.log("value: "+value);
+	if (value == null || value === '') {
+		value = '???';
+	}
+	return value;
+}
+
+//handler for get_bp_price
+function btn_bp_price(){
+	$(document).on('click', btn_getprice, function(){
+		var c_btn = this;
+		$(c_btn).text("Loading....");
+		var item_list = $(this).closest("div.row.row-no-gutter").find(seller_div);
+		var deferreds = [],results = [],node = [];
+		//console.log(item_list);
+
+		item_list.each(function(){
+			//console.log(this);
+			$(this).find("ul").children('li').each(function(index){
+				//console.log(this);
+				var id = $(this).attr("data-id");
+				var bp_history = "https://backpack.tf/item/" + id;
+				//console.log(bp_history);
+				deferreds.push(GrabDOM(0, bp_history,[results, 1+index]));
+				node.push(this);
+			});
+		});
+
+		$.when.apply($, deferreds).done(function() {
+			for(var i = 0; i < results.length;i++){
+				var result = results[i];
+				var value = getBPprice(result);
+				//console.log(value);
+				$(node[i]).find("a.item-summary").append('<div style="color: red;" class="craft_no">'+value+'</div>');
+				$(c_btn).text("Try Again?");
+			}
+		});
+	});
+}
+
+
 //Add Item history button on outpost
 function Outpost_addButton(){
 	//using history instead of attribute as it will also try to run for buying sections
@@ -132,4 +183,18 @@ function Outpost_addButton(){
 		//$(summary_tag).find("div.item-info div.item-subtitle").append(" ");
 
 	});
+
+	//add get bp prices btn
+	var post = $(columns_out);
+	if(post.length > 0){
+		//console.log(post);
+		var item_list = post.find("ul.trade-tools");
+
+		item_list.each(function(){
+			var btn = '<li><a href="javascript:;" class='+get_bp_price+'>Get BP Prices beta</div></a></li>';
+			$(this).prepend(btn);
+		});
+		btn_bp_price(); //handler for button
+	}
+
 }
