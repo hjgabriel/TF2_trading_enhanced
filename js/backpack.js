@@ -72,8 +72,9 @@ function getBpURL(){
 }
 
 function getBpPageNum(url){
-	var page_text = "&page=";
-	var l_page_num = url.split(page_text)[1];
+	var page_parem = "page";
+	var l_page_num = getUrlParam(url, page_parem);
+	//console.log(l_page_num);
 	if(l_page_num == null){
 		l_page_num = 1;
 	}

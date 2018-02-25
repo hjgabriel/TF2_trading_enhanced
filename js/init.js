@@ -29,6 +29,17 @@ function GrabDOM(content_id,URL,arg){
 	});
 }
 
+//get query of the specific parameter in the url
+function getUrlParam(url, paramName) {
+		    var params = url.split(/\?|\&/);
+		    for(i = 0; i < params.length; i++) {
+		        var currentParam = params[i].split("=");
+		        if(currentParam[0] === paramName) {
+		            return currentParam[1];
+		        }
+		    }
+		}
+
 //get query of a specific parameter
 function setURLParameter(url,key,value) {
 	var l_url = url.split('&'), query = {}, new_url="";
