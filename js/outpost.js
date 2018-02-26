@@ -126,7 +126,7 @@ function Outpost_complete(){
 //get bp prices for outpost
 function getBPprice(node){
 	var value = 0;
-	value = $(node).find("span.tag.bottom-right").text();
+	value = $(node).find("div.tag.bottom-right>span").html();
 	//console.log($(node).find("span.tag.bottom-right"));
 	//console.log("value: "+value);
 	if (value == null || value === '') {
