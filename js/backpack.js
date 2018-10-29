@@ -52,12 +52,13 @@ function Backpack_Loop(DOM){
 		if(this.innerHTML.includes("data-spell_1")){
 			//console.log(this);
 			//add items with spells
-			var node = $(this).find("li");
+			var node = $(this).find("div.item");
 			node.attr('data-toggle',"popover");
 
 			$(columns_bp).first().append(this.outerHTML);
 
 			//show custom popover
+			//console.log(node[0]);
 			show_popover(node[0]);
 			
 		}
@@ -131,7 +132,7 @@ function show_popover(info){
 	+ wiki_id  + '" target="_blank"><i class="stm stm-tf2"></i> Wiki</a>'
 	+ '</dd>';
 
-	$(".media-object").popover({
+	$(".listing-item").popover({
 	        title: '<h3 class="popover-title">' + p_title + '</h3>',
 	        content: body,
 	        trigger: "hover click focus",
@@ -180,8 +181,8 @@ function add_inv_param(){
 //find key and ref from item on backpack.tf classified
 function getKeyRefBP(node){
 	//console.log(node);
-	//console.log($(node).find("li.item"));
-	var value = $(node).find("li.item").attr("data-listing_price");
+	//console.log($(node).find("div.item"));
+	var value = $(node).find("div.item").attr("data-listing_price");
 	//console.log(value);
 	var arr = value.split(',');
 	var key = '', ref = '';
