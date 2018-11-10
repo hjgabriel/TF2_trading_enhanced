@@ -1,7 +1,7 @@
 {
   "name": "TF2 Trading Enhanced",
-  "description": "Adds additional features to backpack, outpost and steam.",
-  "version": "1.0.4",
+  "description": "Adds additional features to backpack and steam.",
+  "version": "1.0.5",
   "manifest_version": 2,
 
   "content_scripts": [

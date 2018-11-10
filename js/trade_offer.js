@@ -239,24 +239,34 @@ function steam_trade_start(){
 				}else if($(e.currentTarget).attr("id") == invTheirTab){
 					userID = 1;
 				}
+				//console.log("inventory");
 				doesTF2InvExist(errorCheck);
 			});
 
 			var my_sel = "div#appselect_option_you_440_2", their_sel = "div#appselect_option_them_440_2",
-			filter = "input#filter_control", clear = "div#filter_clear_btn";
+			filter = "input#filter_control", clear = "div#filter_clear_btn", tag = "input.econ_tag_filter_checkbox";
 
 			//Cases where clear button for input is pressed or TF2 Inventory is selected for either users
-			$(my_sel+","+ their_sel +","+ filter +","+ clear).click(function(){
+			$(my_sel+","+ their_sel +","+ clear).click(function(){
+				//console.log("clear");
 				doesTF2InvExist(errorCheck);
 			});
 
 			//Also have inventory search if the filter has beeen changed
-			$('input#'+filter + ", div").on('input',function(e){
+			$(filter).on('input',function(){
+				//console.log("filter");
 				doesTF2InvExist(errorCheck);
-			});	
+			});
+
+			//check for checkbox changes
+			$("div#filter_options").on('change',tag,function(){
+				//console.log("checkbox");
+				doesTF2InvExist(errorCheck);
+			});
 
 			//selected an item in any box
 			$("div.trade_item_box").click(function(){
+				//console.log("clicked item");
 				setTimeout(findAmount,500); //wait for item to move before we check the items
 			});
 
