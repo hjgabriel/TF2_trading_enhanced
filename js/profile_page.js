@@ -2,7 +2,10 @@ var rep_site = "https://rep.tf/";
 
 //add button on steam profile
 function addRepTF(){
-	var steamURL = window.location.href.split('/');
+	// https://steamcommunity.com + /id/[Vanity URL]/
+	// or https://steamcommunity.com + /profiles/[Community ID]/
+	var steamURL = window.location.origin + window.location.pathname;
+	steamURL = steamURL.split('/');
 	var steamID = steamURL[steamURL.length - 1] == '' ? steamURL[steamURL.length - 2] : steamURL.pop();
 	//console.log(steamID);
 
